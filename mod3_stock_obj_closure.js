@@ -42,20 +42,35 @@ function stock (title) {
 
        get_p (code) {       /* return product obj if exists or null if it doesn’t  */
             // ....... add code here
+            if ( _stock[code] ) {
+                return _stock[code];
+            }
+            return null;
         },
 
                      /* if code exists eliminate it and return true, else return false  */
         del_p (code) {
             // ....... add code here
-
+            if ( _stock[code] ) {
+                delete _stock[code];
+                return true;
+            }
+            return false;
             // .......
         },
 
                 /* Add n to prod if code exists, or create new prod with json params*/
         addJSON (json_prods)  {
             // ....... add code here
-
-
+            const recibido = JSON.parse(json_prods);
+            const claves = Object.keys(recibido);
+            claves.forEach((laClave) => {
+                let n = recibido[laClave].n ? recibido[laClave].n : 0;
+                if (! _stock[laClave]) {
+                    this.new_p(laClave, recibido[laClave].desc)    
+                } 
+                this.add(laClave, n);
+            });
             // .......
         },
 
@@ -68,5 +83,42 @@ function stock (title) {
         }
     }
 }
+
+console.log("Hola Mundo");
+
+let	my_shop	=	stock	("My	shop");	
+console.log();	
+my_shop.new_p('a1',	'fork');	
+my_shop.add('a1',	3);	
+my_shop.new_p('a4',	'spoon');	
+my_shop.add('a4',	7);	
+console.log("->	my_shop.new_p('a1',	'fork')");	
+console.log("->	my_shop.add('a1',	3)");	
+console.log("->	my_shop.new_p('a4',	'spoon')");	
+console.log("->	my_shop.add('a4',	7)");	
+console.log();	
+console.log("There	are	"	+	my_shop.number()	+	"	prods");	
+console.log();	
+console.log("_stock=	"	+	my_shop.getJSON());	
+console.log();	
+console.log();	
+my_shop.addJSON('{	"a1":{"n":2},	"a2":{"code":"a2",	"desc":"knife",	"n":	3}}');	
+console.log(`->	my_shop.addJSON('{	"a1":{"n":2},	"a2":{"code":"a2",	"desc":"knife",	"n":	3}}'`);	
+console.log();	
+console.log("_stock=	"	+	my_shop.getJSON());	
+console.log();	
+console.log();	
+my_shop.add('a1',	4);	
+console.log("->	my_shop.add('a1',	4)");	
+console.log();	
+console.log("_stock['a1']	=	"	+	JSON.stringify(my_shop.get_p('a1')));	
+console.log();	
+console.log();	
+my_shop.rem('a2',	3);	
+my_shop.del_p('a4');	
+console.log("->	my_shop.rem('a2',	3)");	
+console.log("->	my_shop.del_p('a4')");	
+console.log();	
+console.log("_stock=	"	+	my_shop.getJSON());	
 
 module.exports = {stock};
